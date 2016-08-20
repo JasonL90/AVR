@@ -14,7 +14,10 @@ typedef unsigned char byte;
 
 byte led = 0xfe; // 1111 1110
 bool flag = true;
-byte btn_state = 0x00;
+byte btn_now;
+byte btn_last;
+
+
 
 void __init__();
 void changeDriection();
@@ -54,13 +57,14 @@ void __init__()
 
 
 void changeDriection(){
-	byte sw;
-	sw = PIND & 0x01;
-	if(sw == btn_state){
+
+	btn_now = PIND & 0x01;
+	if (btn_now != btn_last) {
+		if (btn_now > 0) {
 		flag = !flag;
 	}
-
-	
+	btn_last = btn_now;
+}
 }
 
 void rtol(){
@@ -73,8 +77,8 @@ void rtol(){
 		flag = false;
 
 	}
-	if(led == 0xff)
-	{
+	if(led == 0xff){
+
 		led = 0x7f;
 		flag = false;
 	}
